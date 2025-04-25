@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lotto.insight.mapper.LottoMapper">
+
+	<resultMap id="LottoResultMap" type="com.lotto.insight.dto.LottoResultDto">
+	    <id property="round" column="round"/>
+	    <result property="number1" column="number1"/>
+	    <result property="number2" column="number2"/>
+	    <result property="number3" column="number3"/>
+	    <result property="number4" column="number4"/>
+	    <result property="number5" column="number5"/>
+	    <result property="number6" column="number6"/>
+	    <result property="bonus" column="bonus_number"/>
+	</resultMap>
+
+    <select id="getLottoResultByRound" parameterType="int" resultMap="LottoResultMap">
+        SELECT * FROM lotto_results WHERE round = #{round}
+    </select>
+
+    <select id="getRecentLottoResults" resultMap="LottoResultMap">
+        SELECT * FROM lotto_results ORDER BY round DESC LIMIT 10
+    </select>
+
+    <select id="getAllNumbers" resultType="int">
+        SELECT number1 FROM lotto_results
+        UNION ALL SELECT number2 FROM lotto_results
+        UNION ALL SELECT number3 FROM lotto_results
+        UNION ALL SELECT number4 FROM lotto_results
+        UNION ALL SELECT number5 FROM lotto_results
+        UNION ALL SELECT number6 FROM lotto_results
+    </select>
+
+    <insert id="insertLottoResult" parameterType="com.lotto.insight.dto.LottoResultDto">
+        INSERT INTO lotto_results (round, number1, number2, number3, number4, number5, number6, bonus_number)
+        VALUES (#{round}, #{number1}, #{number2}, #{number3}, #{number4}, #{number5}, #{number6}, #{bonus})
+    </insert>
+
+    <update id="updateLottoResult" parameterType="com.lotto.insight.dto.LottoResultDto">
+        UPDATE lotto_results SET 
+            number1 = #{number1},
+            number2 = #{number2},
+            number3 = #{number3},
+            number4 = #{number4},
+            number5 = #{number5},
+            number6 = #{number6},
+            bonus_number = #{bonus}
+        WHERE round = #{round}
+    </update>
+
+    <delete id="deleteLottoResult" parameterType="int">
+        DELETE FROM lotto_results WHERE round = #{round}
+    </delete>
+
+</mapper>
